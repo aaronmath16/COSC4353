@@ -18,17 +18,12 @@
             <form class="fieldForm">
                 <h2 class="heading">Get a Quote:</h1>
                 <input class="field" type="number" name="gallonsRequested" id="gallonsRequested" required placeholder="Gallons Requested">
-                <input class="field" type="text" name="deliveryAddress" id="deliveryAddress" readonly placeholder="Delivery Adress">
+                <input class="field" type="text" name="deliveryAddress" id="deliveryAddress" readonly placeholder="Delivery Address">
                 <input class="field" type="date" name="deliveryDate" id="deliveryDate" placeholder="Delivery Date">
                 <input class="field" type="number" name="quotePrice" id="quotePrice" readonly placeholder="Price Per Gallon">
                 <input class="field" type="number" name="totalDue" id="totalDue" readonly placeholder="Total Amount Due">
                 <input type="submit" name="submitQuote" id="submitQuote" value="Save Quote">
             </form>
         </div>
-        <script>
-            $().ready(function(){
-                $("#nav-area").load("nav.html");
-            });
-        </script>
     </body>
 </html>
