@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link href="theme.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+</head>
+<body>
+  <div class="navbar" id="nav-area">
+    <div style="margin-left: 12px;">4353<strong style="color: #4b39ef;">Fuel</strong></div>
+    <a href="quotePage.html"><div class="panel navbutton"><i class="material-icons">attach_money</i>Quote</div></a>
+    <a href="fuelhistory.html"><div class="panel navbutton"><i class="material-icons">business_center</i>History</div></a>
+    <a href="profile.html"><div class="panel navbutton"><i class="material-icons">account_box</i>Profile</div></a>
+    <a class="logOut" href="registerUser.html"><div class="panel navbutton">Register</div></a>
+</div>
+    <div class="panel">
+      <form action="/login" method="POST" class='fieldForm'>
+        <h2 class = "heading">Login</h1>
+            <input class="field" type="text" placeholder="Enter Username" id="username" name="username" maxlength='50' required>
+            <input class="field" type="password" placeholder="Enter Password" id="password" name="password" maxlength='50' required>
+            <input class="field" type="submit" value = 'Log In'>
+      </form>
+    </div>
+</body>
+</html>

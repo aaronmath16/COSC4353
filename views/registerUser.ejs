@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <link href="theme.css" type="text/css" rel="stylesheet">
+    <title>Sign Up</title>
+</head>
+<style>
+    #repeatPw{
+        border: 4px solid red;
+
+    }
+</style>
+<script>
+    validRepeat = () => {
+        const pass = document.getElementById("password").value;
+        const repeated = document.getElementById("repeatPw").value;
+        if(pass == repeated){
+
+            document.getElementById('matchedPw').style="color:blue"
+            document.getElementById('repeatPw').style="border: 4px solid green;"
+            document.getElementById('valid').value="valid"
+
+        }else{
+            
+            document.getElementById('valid').value=""
+            document.getElementById('matchedPw').style="color:red"
+            document.getElementById('repeatPw').style="border: 4px solid red;"
+        }
+
+    }
+    //todo validate pass match before send, dont let it submit until its valid. I think you can do it without Jquery.
+    verifyPass = () =>{
+        validRepeat();}
+
+</script>
+
+<body>
+
+
+    <div class="navbar" id="nav-area">
+        <div style="margin-left: 12px;">4353<strong style="color: #4b39ef;">Fuel</strong></div>
+        <a href="/quotePage"><div class="panel navbutton"><i class="material-icons">attach_money</i>Quote</div></a>
+        <a href="/fuelhistory"><div class="panel navbutton"><i class="material-icons">business_center</i>History</div></a>
+        <a href="/profile"><div class="panel navbutton"><i class="material-icons">account_box</i>Profile</div></a>
+        <a class="logOut" href="/login"><div class="panel navbutton">Sign In</div></a>
+    </div>
+    <div class="panel">
+
+        <div class="errs">
+            <% if (typeof error != "undefined") { %>
+                <li><%= error %></li>  
+             <% } %>
+        </div>
+    <form action="/register" method="POST" id='form'>
+
+        <div class="fieldForm">
+            <h2 class = "heading">Sign Up</h1>
+          <input class="field" type="text" placeholder="Enter Username" id="username" name="username" maxlength='650' required>
+          <input class="field" type="password" placeholder="Enter Password" id="password" name="password" onkeyup="validRepeat()" maxlength='50' required>
+          <input class="field" type="password" placeholder="Repeat Password" id="repeatPw" name="repeatPw" onkeyup="validRepeat()" maxlength='50' required>
+          <div class="constraints">
+            <p class = "matched" id = "matchedPw"> Passwords must match</p>
+          </div>
+          <button type="submit">Sign up!</button>
+        </div>
+      </form>
+
+
+    </div>
+</body>
+</html>

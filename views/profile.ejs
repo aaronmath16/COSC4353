@@ -1,7 +1,4 @@
 <!DOCTYPE html>
-
-<!--git pull before you do anything-->
-<!--commit and push WITH MESSAGE when you finish-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,14 +11,22 @@
 <body>
     <div class="navbar" id="nav-area">
         <div style="margin-left: 12px;">4353<strong style="color: #4b39ef;">Fuel</strong></div>
-        <a href="quotePage.html"><div class="panel navbutton"><i class="material-icons">attach_money</i>Quote</div></a>
-        <a href="fuelhistory.html"><div class="panel navbutton"><i class="material-icons">business_center</i>History</div></a>
-        <a href="profile.html"><div class="panel navbutton"><i class="material-icons">account_box</i>Profile</div></a>
-        <a class="logOut" href="login.html"><div class="panel navbutton"><i class="material-icons">exit_to_app</i>Log Out</div></a>
+        <a href="/quotePage"><div class="panel navbutton"><i class="material-icons">attach_money</i>Quote</div></a>
+        <a href="/fuelhistory"><div class="panel navbutton"><i class="material-icons">business_center</i>History</div></a>
+        <a href="/profile"><div class="panel navbutton"><i class="material-icons">account_box</i>Profile</div></a>
+        <a class="logOut" href="/logout"><div class="panel navbutton">Log Out</div></a>
     </div>
     <div class="panel">
+        <div class="errs">
+            <% if (typeof error != "undefined") { %>
+                <%= error %>
+                <% } %>
+            <% if (typeof message != "undefined") { %>
+                <%= message %>
+                <% } %>
+        </div>
     <h1 class="heading">Client Profile</h1>
-    <form class="fieldForm">
+    <form class="fieldForm" action="/profile" method="POST">
         <label for="fullname">Full Name:<span class="required">*</span></label>
         <input type="text" id="fullname" name="fullname" maxlength="50" placeholder="John Doe" required class="field">
         
