@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="theme.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    </head>
+    <body>
+        <div class="navbar" id="nav-area">
+            <div style="margin-left: 12px;">4353<strong style="color: #4b39ef;">Fuel</strong></div>
+            <a href="/quotePage"><div class="panel navbutton"><i class="material-icons">attach_money</i>Quote</div></a>
+            <a href="/fuelhistory"><div class="panel navbutton"><i class="material-icons">business_center</i>History</div></a>
+            <a href="/profile"><div class="panel navbutton"><i class="material-icons">account_box</i>Profile</div></a>
+            <a class="logOut" href="/logout"><div class="panel navbutton">Log Out</div></a>
+        </div>
+        <div class="panel">
+            <div class="errs">
+                <% if (typeof error != "undefined") { %>
+                    <%= error %>
+                 <% } %>
+            </div>
+            <form class="fieldForm">
+                <h2 class="heading">Get a Quote:</h1>
+                <input class="field" type="number" name="gallonsRequested" id="gallonsRequested" required placeholder="Gallons Requested">
+                <input class="field" type="text" name="deliveryAddress" id="deliveryAddress" readonly placeholder="Delivery Address">
+                <input class="field" type="date" name="deliveryDate" id="deliveryDate" placeholder="Delivery Date">
+                <input class="field" type="number" name="quotePrice" id="quotePrice" readonly placeholder="Price Per Gallon">
+                <input class="field" type="number" name="totalDue" id="totalDue" readonly placeholder="Total Amount Due">
+                <input type="submit" name="submitQuote" id="submitQuote" value="Save Quote">
+            </form>
+        </div>
+    </body>
+</html>
