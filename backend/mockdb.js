@@ -31,7 +31,7 @@ const mockProfile = [
         address1: "1111 Bottom Drive",
         address2: "Apt 2",
         city: "Houston",
-        state: "Texas",
+        state: "TX",
         zipcode: 34345
     }
 ]

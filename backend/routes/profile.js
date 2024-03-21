@@ -6,6 +6,8 @@ const states = [ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM
 const mockdb = require('../mockdb')
 const mockProfile = mockdb.profile
 
+var delivAddress = "614 Default Rd"
+
 var mockprofile = mockProfile[0]
 var name = null
 var address = null
@@ -14,39 +16,39 @@ var city = null
 var state = null
 var zipcode = null
 router.get('/',loggedIn, Info, (req,res) =>{
-    res.render('profile', {fullname: name})
+    res.render('profile', {error: '', fullname: name, address1:address, address2: address2, city: city, state: state, zipcode: zipcode})
 })
 
 router.post('/',loggedIn,(req,res) =>{
     const {fullname , address1 , address2, city, state , zipcode} = req.body
-    if (fullname == undefined || address1 == undefined || address2 == undefined || city == undefined || state == undefined || zipcode == undefined){
-        return res.render('profile.ejs',{error:'Missing input!'})
+    if (fullname == '' || address1 == '' || city == '' || state == '' || zipcode == ''){
+        return res.render('profile.ejs',{error:'Missing input!', fullname: fullname, address1: address1, address2:address2, city: city, state: state, zipcode: zipcode})
     }
     if (fullname.length > 50){
         error = "Name too long"
-        return res.render('profile.ejs',{error:error})
+        return res.render('profile.ejs',{error:error, address1: address1, address2:address2, city: city, state: state, zipcode: zipcode})
     }
     if (address1.length > 100){
         error = "Address 1 too long"
-        return res.render('profile.ejs',{error:error})
+        return res.render('profile.ejs',{error:error, fullname: fullname, address2:address2, city: city, state: state, zipcode: zipcode})
     }
     if (address2.length > 100){
         error = "Address 2 too long"
-        return res.render('profile.ejs',{error:error})
+        return res.render('profile.ejs',{error:error, fullname: fullname, address1: address1, city: city, state: state, zipcode: zipcode})
     }
     if (city.length > 100){
         error = "City too long"
-        return res.render('profile.ejs',{error:error})
+        return res.render('profile.ejs',{error:error, fullname: fullname, address1: address1, address2:address2, state: state, zipcode: zipcode})
     }
     if(!states.includes(state)){
         error = "Invalid State code"
-        return res.render('profile.ejs',{error:error})
+        return res.render('profile.ejs',{error:error, fullname: fullname, address1: address1, address2:address2, city: city, zipcode: zipcode})
     }
     if(zipcode.length < 5 || zipcode.length > 9){
         error = "Invalid zip code"
-        return res.render('profile.ejs',{error:error})
+        return res.render('profile.ejs',{error:error, fullname: fullname, address1: address1, address2:address2, city: city, state: state})
     }
-    return res.render('quotePage.ejs')
+    return res.render('quotePage.ejs', {delivAddress: delivAddress})
 })
 
 function Info(req, res, next) {

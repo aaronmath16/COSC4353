@@ -16,18 +16,20 @@
         </div>
         <div class="panel">
             <div class="errs">
-                <% if (typeof error != "undefined") { %>
+                
+                <% if (typeof error != "undefined" && error != '') { %>
+                    <%console.log(error)%>
                     <%= error %>
                  <% } %>
             </div>
-            <form class="fieldForm">
+            <form action= "/quotePage" class="fieldForm" method="POST">
                 <h2 class="heading">Get a Quote:</h1>
-                <input class="field" type="number" name="gallonsRequested" id="gallonsRequested" required placeholder="Gallons Requested">
+                <input class="field" type="number" name="gallonsRequested" id="gallonsRequested" placeholder="Gallons Requested">
                 <input class="field" type="text" name="deliveryAddress" id="deliveryAddress" readonly placeholder="Delivery Address" value="<%= locals.delivAddress%>">
                 <input class="field" type="date" name="deliveryDate" id="deliveryDate" placeholder="Delivery Date">
                 <input class="field" type="number" name="quotePrice" id="quotePrice" readonly placeholder="Price Per Gallon" value="<% locals.suggPrice%>">
                 <input class="field" type="number" name="totalDue" id="totalDue" readonly placeholder="Total Amount Due" value="<% locals.totPrice%>">
-                <input type="submit" name="submitQuote" id="submitQuote" value="Save Quote">
+                <button type="submit">Save Quote</button>
             </form>
         </div>
     </body>

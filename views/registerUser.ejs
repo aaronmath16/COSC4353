@@ -22,11 +22,11 @@
 
             document.getElementById('matchedPw').style="color:blue"
             document.getElementById('repeatPw').style="border: 4px solid green;"
-            document.getElementById('valid').value="valid"
+            //document.getElementById('valid').value="valid"    gives an error because no valid element exists
 
         }else{
             
-            document.getElementById('valid').value=""
+            //document.getElementById('valid').value=""         gives an error because no valid element exists
             document.getElementById('matchedPw').style="color:red"
             document.getElementById('repeatPw').style="border: 4px solid red;"
         }
@@ -59,9 +59,9 @@
 
         <div class="fieldForm">
             <h2 class = "heading">Sign Up</h1>
-          <input class="field" type="text" placeholder="Enter Username" id="username" name="username" maxlength='650' required>
-          <input class="field" type="password" placeholder="Enter Password" id="password" name="password" onkeyup="validRepeat()" maxlength='50' required>
-          <input class="field" type="password" placeholder="Repeat Password" id="repeatPw" name="repeatPw" onkeyup="validRepeat()" maxlength='50' required>
+          <input class="field" type="text" placeholder="Enter Username" id="username" name="username" maxlength='50'>
+          <input class="field" type="password" placeholder="Enter Password" id="password" name="password" onkeyup="validRepeat()" maxlength='50'>
+          <input class="field" type="password" placeholder="Repeat Password" id="repeatPw" name="repeatPw" onkeyup="validRepeat()" maxlength='50'>
           <div class="constraints">
             <p class = "matched" id = "matchedPw"> Passwords must match</p>
           </div>

@@ -10,7 +10,7 @@ router.post('/',loggedOut,(req,res) =>{
     console.log(req.body)
     const {username , password , repeatPw} = req.body
     console.log(username)
-    if (username == undefined || password == undefined || repeatPw == undefined){
+    if (username == '' || password == '' || repeatPw == '' || username == undefined || password == undefined || repeatPw == undefined){
         return res.render('registerUser.ejs',{error:'Missing input!'})
     }
     if (password !== repeatPw){
@@ -32,7 +32,7 @@ router.post('/',loggedOut,(req,res) =>{
         return res.render('registerUser.ejs', {error : "PW too long"})
     }
 
-    res.render('profile.ejs',{message:"Registration Sucessful!  Please fill in your profile details."})
+    res.render('profile.ejs',{message:"Registration Sucessful!  Please fill in your profile details.", error:''})
 })
 
 
