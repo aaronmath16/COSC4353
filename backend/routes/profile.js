@@ -33,6 +33,11 @@ router.post('/',loggedIn,(req,res) =>{
         error = "Invalid State code"
         return res.render('profile.ejs',{error:error})
     }
+
+    if(zipcode.length > 5){
+        error = "Invalid zip code"
+        return res.render('profile.ejs',{error:error})
+    }
     return res.render('quotePage.ejs')
     //todo zip code
     //clientside validations go here.  Consult the register js route for an example
