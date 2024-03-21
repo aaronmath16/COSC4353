@@ -25,5 +25,14 @@ const mockhistory = [
     }
 ]
 
-
+const mockProfile = [
+    {
+        firstName: "Timmy",
+        lastName:"Turner",
+        address1: "1111 Bottom Drive",
+        city: "Houston",
+        state: "Texas",
+        zipcode: 34345
+    }
+]
 module.exports = mockusers

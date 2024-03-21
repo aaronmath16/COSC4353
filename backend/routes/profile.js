@@ -42,4 +42,8 @@ router.post('/',loggedIn,(req,res) =>{
     //clientside validations go here.  Consult the register js route for an example
 })
 
+function Info(req, res, next) {
+
+}
+
 module.exports = router
