@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage",
-    "dev": "nodemon backend/server.js"
+    "dev": "nodemon backend/serverstart.js"
   },
   "keywords": [],
   "author": "",

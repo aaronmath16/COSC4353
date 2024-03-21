@@ -14,13 +14,16 @@ router.post('/',loggedOut,(req,res) =>{
         return res.render('registerUser.ejs',{error:'Missing input!'})
     }
     if (password !== repeatPw){
-        return res.status(401).send("Passwords Do not Match!")
+        return res.render('registerUser.ejs',{error:"Passwords Don't match!"})
     }
 /*  TEMP psuedocode
      if (username in GETUSERSFROMDB){
         return res.render('registerUser.ejs',{error:'Username in use!'})
     }     */
-    //
+    //hardcoded version of above
+    if (username =="testing"){
+        return res.render('registerUser.ejs',{error:'Username in use!'})
+    }     
     if (username.length > 50){
         error = "Username too long"
         return res.render('registerUser.ejs',{error:'Username Too Long'})

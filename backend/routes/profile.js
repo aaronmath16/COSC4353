@@ -47,8 +47,6 @@ router.post('/',loggedIn,(req,res) =>{
         return res.render('profile.ejs',{error:error})
     }
     return res.render('quotePage.ejs')
-    //todo zip code
-    //clientside validations go here.  Consult the register js route for an example
 })
 
 function Info(req, res, next) {

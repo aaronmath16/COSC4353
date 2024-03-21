@@ -40,7 +40,8 @@ app.use('/fuelhistory',fuelhistoryRouter)
 app.use('/quotePage',quoteRouter)
 app.use('/logout',logoutRouter)
 
-app.listen(3000)
-console.log("Server hosted at port 3000")
+//moved to a new file so testing can be done without hosting the server.
+//app.listen(3000)
+//console.log("Server hosted at port 3000")
 
 module.exports = app

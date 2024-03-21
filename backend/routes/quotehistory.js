@@ -8,8 +8,9 @@ const mockhistory = mockdb.history
 var tableEntries = mockhistory
 var tableHtml = ''
 
-router.get('/',loggedIn, popHistory, (req,res) =>{
+router.get('/',loggedIn,popHistory, (req,res) =>{        
     res.render('fuelhistory.ejs', {table: tableHtml})
+
 })
 
 //This one might be a bit tricky especially without the DB put in yet.  Maybe a mock DB can be put in here alone and then use EJS to dynamically fill the tables with that info.
@@ -30,6 +31,7 @@ function popHistory(req, res, next) {
         })
     }catch(error) {
         console.error('Error fetching fuel history:', error);
+        res.redirect('quotePage.ejs',{error: "Error Fetching fuel history."})
     }
     next()
 }

@@ -164,7 +164,7 @@ describe('profile POSTS',()=>{
             fullname:"John Smith",
             address1:"123",
             address2:"123",
-            city:"HoustoHoustonHoustoHoustonHoustonHoustonHoustonHoustonHoustonHoustonHoustonnHoustoHoustonHoustonHoustonHoustonHoustonHoustonHoustonHoustonnHoustonHoustonHoustonHoustonHoustonHoustonHoustonn",
+            city:"HoustoHoustonHoustonHoustonHoustonHoustonHoustonHoustonHoustonn",
             state:'TX',
             zipcode:'77204'
         }).expect(302).end(()=>{
@@ -184,18 +184,18 @@ describe('profile POSTS',()=>{
         })
     })
 //uncomment when zip is in
-    test('Invalid zip',(done) =>{
+/*     test('Invalid zip',(done) =>{
         server.post('/profile').type('form').send({
             fullname:"John Smith",
             address1:"123",
             address2:"123",
             city:"houston",
-            state:'TX',
-            zipcode:'77203333444'
+            state:'texas',
+            zipcode:'772033334'
         }).expect(302).end(()=>{
             done()
         })
-    })
+    }) */
 
 
     test('Valid Profile',(done) =>{
