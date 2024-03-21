@@ -35,7 +35,9 @@ const mockProfile = [
         zipcode: 34345
     }
 ]
+
 module.exports = {
     users:mockusers, 
-    history:mockhistory
+    history:mockhistory,
+    profile:mockProfile
 }
