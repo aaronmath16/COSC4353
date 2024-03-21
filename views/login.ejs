@@ -9,6 +9,9 @@
 
 </head>
 <body>
+  <% if (typeof message != "undefined") { %>
+    <script>alert("<%= locals.message %>");</script>
+  <% } %>
   <div class="navbar" id="nav-area">
     <div style="margin-left: 12px;">4353<strong style="color: #4b39ef;">Fuel</strong></div>
     <a href="/quotePage"><div class="panel navbutton"><i class="material-icons">attach_money</i>Quote</div></a>
@@ -21,9 +24,9 @@
         <% if (typeof error != "undefined") { %>
           <%= error %>
           <% } %>
-          <% if (typeof message != "undefined") { %>
+          <!--<% if (typeof message != "undefined") { %>
             <%= message %>
-            <% } %>
+            <% } %>-->
     </div>
       <form action="/login" method="POST" class='fieldForm'>
         <h2 class = "heading">Login</h1>

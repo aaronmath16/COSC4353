@@ -33,8 +33,7 @@ router.post('/',loggedIn,(req,res) =>{
         error = "Invalid State code"
         return res.render('profile.ejs',{error:error})
     }
-
-    if(zipcode.length > 5){
+    if(zipcode.length < 5 || zipcode.length > 9){
         error = "Invalid zip code"
         return res.render('profile.ejs',{error:error})
     }
