@@ -8,7 +8,11 @@ const mockProfile = mockdb.profile
 
 var mockprofile = mockProfile[0]
 var name = null
-
+var address = null
+var address2 = null
+var city = null
+var state = null
+var zipcode = null
 router.get('/',loggedIn, Info, (req,res) =>{
     res.render('profile', {fullname: name})
 })
@@ -49,6 +53,11 @@ router.post('/',loggedIn,(req,res) =>{
 
 function Info(req, res, next) {
     name = mockprofile.fullName
+    address = mockprofile.address1
+    address2 = mockprofile.address2
+    city = mockprofile.city
+    state = mockprofile.state
+    zipcode = mockprofile.zipcode
     next()
 }
 

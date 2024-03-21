@@ -29,6 +29,7 @@ const mockProfile = [
     {
         fullName: "Timmy Turner",
         address1: "1111 Bottom Drive",
+        address2: "Apt 2"
         city: "Houston",
         state: "Texas",
         zipcode: 34345
