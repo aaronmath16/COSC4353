@@ -6,4 +6,24 @@ const mockusers = [
     }
 ]
 
+const mockhistory = [
+    {
+        name : "Aaron",
+        gallonsRequested : 20,
+        deliveryDate : 1/21/22,
+        deliveryAddress : "University of Houston",
+        suggestedPrice : 100,
+        total : 200
+    },
+    {
+        name : "Aliyan",
+        gallonsRequested : 15,
+        deliveryDate : 4/30/25,
+        deliveryAddress : "Houston",
+        suggestedPrice : 30,
+        total : 60
+    }
+]
+
+
 module.exports = mockusers
