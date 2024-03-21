@@ -25,8 +25,8 @@ function popHistory(req, res, next) {
                 "</td><td>" + entry.gallonsRequested + 
                 "</td><td>" + entry.deliveryDate + 
                 "</td><td>" + entry.deliveryAddress + 
-                "</td><td> " + entry.suggestedPrice + 
-                "</td><td>" + entry.total + "</td></tr>";
+                "</td><td> " + "$" + entry.suggestedPrice + 
+                "</td><td>" + "$" + entry.total + "</td></tr>";
         })
     }catch(error) {
         console.error('Error fetching fuel history:', error);
