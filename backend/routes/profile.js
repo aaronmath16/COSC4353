@@ -3,9 +3,14 @@ const router = express.Router()
 const loggedIn = require('../passportauth').loggedIn
 const loggedOut = require('../passportauth').loggedOut
 const states = [ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY' ];
+const mockdb = require('../mockdb')
+const mockProfile = mockdb.profile
 
-router.get('/',loggedIn,(req,res) =>{
-    res.render('profile')
+var mockprofile = mockProfile[0]
+var name = null
+
+router.get('/',loggedIn, Info, (req,res) =>{
+    res.render('profile', {fullname: name})
 })
 
 router.post('/',loggedIn,(req,res) =>{
@@ -42,5 +47,9 @@ router.post('/',loggedIn,(req,res) =>{
     //clientside validations go here.  Consult the register js route for an example
 })
 
+function Info(req, res, next) {
+    name = mockprofile.fullName
+    next()
+}
 
 module.exports = router

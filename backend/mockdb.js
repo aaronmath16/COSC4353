@@ -27,8 +27,7 @@ const mockhistory = [
 
 const mockProfile = [
     {
-        firstName: "Timmy",
-        lastName:"Turner",
+        fullName: "Timmy Turner",
         address1: "1111 Bottom Drive",
         city: "Houston",
         state: "Texas",
