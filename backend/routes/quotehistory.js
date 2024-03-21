@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
-
-router.get('/',(req,res) =>{
+const loggedIn = require('../passportauth').loggedIn
+const loggedOut = require('../passportauth').loggedOut
+router.get('/',loggedIn,(req,res) =>{
     res.render('fuelhistory')
 })
 

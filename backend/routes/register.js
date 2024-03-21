@@ -1,13 +1,18 @@
 const express = require('express')
 const router = express.Router()
-
-router.get('/',(req,res) =>{
+const loggedIn = require('../passportauth').loggedIn
+const loggedOut = require('../passportauth').loggedOut
+router.get('/',loggedOut,(req,res) =>{
     res.render('registerUser')
 })
 
-router.post('/',(req,res) =>{
+router.post('/',loggedOut,(req,res) =>{
     console.log(req.body)
     const {username , password , repeatPw} = req.body
+    console.log(username)
+    if (username == undefined || password == undefined || repeatPw == undefined){
+        return res.render('registerUser.ejs',{error:'Missing input!'})
+    }
     if (password !== repeatPw){
         return res.status(401).send("Passwords Do not Match!")
     }
