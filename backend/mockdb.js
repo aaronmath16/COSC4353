@@ -10,7 +10,7 @@ const mockhistory = [
     {
         name : "Aaron",
         gallonsRequested : 20,
-        deliveryDate : Date('1/21/22'),
+        deliveryDate : "1/21/22",
         deliveryAddress : "University of Houston",
         suggestedPrice : 100,
         total : 200
@@ -18,7 +18,7 @@ const mockhistory = [
     {
         name : "Aliyan",
         gallonsRequested : 15,
-        deliveryDate : Date('4/30/25'),
+        deliveryDate : "4/30/25",
         deliveryAddress : "Houston",
         suggestedPrice : 30,
         total : 60
