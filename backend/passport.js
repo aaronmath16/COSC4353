@@ -1,7 +1,8 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
-const mockusers = require('./mockdb')
+const mockdb = require('./mockdb')
+const mockusers = mockdb.users
 console.log(mockusers)
 passport.use(new LocalStrategy(
     async (username,password,done) =>{
