@@ -1,4 +1,4 @@
-//fns to make sure logged in users dont see login page, and
+//fns to make sure logged in users dont see login page
 module.exports.loggedIn = (req,res,next) =>{
     if (req.isAuthenticated()){
         return next()

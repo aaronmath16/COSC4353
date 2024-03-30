@@ -219,10 +219,57 @@ describe('profile POSTS',()=>{
 describe('fuelhistory while logged in',()=>{
 
     test("fuelhistory while logged in",(done) =>{
-        server.post('/fuelhistory').expect(200)
+        server.get('/fuelhistory').expect(200)
        .expect("Location","fuelhistory")
        .end(()=>{
            done()
        })
    })
+})
+
+describe('quotepage while logged in',()=>{
+
+    test('Valid quote',(done) =>{
+        server.post('/quotePage').type('form').send({
+            gallonsRequested:"100",
+            deliveryAddress:"123",
+            deliveryDate:"2024-04-04",
+            city:"Houston",
+            state:'TX',
+            zipcode:'77204'
+        }).expect(200).end((err)=>{
+            if (err) return done(err)
+            done()
+        })
+    })
+
+
+    test('invalid date',(done) =>{
+        server.post('/quotePage').type('form').send({
+            gallonsRequested:"100",
+            deliveryAddress:"123",
+            deliveryDate:"not a real date",
+            city:"Houston",
+            state:'TX',
+            zipcode:'77204'
+        }).expect(302).end((err)=>{
+            if (err) return done(err)
+            done()
+        })
+    })
+
+
+    test('invalid gals',(done) =>{
+        server.post('/quotePage').type('form').send({
+            gallonsRequested:"",
+            deliveryAddress:"123",
+            deliveryDate:"2024-04-04",
+            city:"Houston",
+            state:'TX',
+            zipcode:'77204'
+        }).expect(302).end((err)=>{
+            if (err) return done(err)
+            done()
+        })
+    })
 })

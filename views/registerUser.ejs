@@ -59,10 +59,9 @@
 
         <div class="fieldForm">
             <h2 class = "heading">Sign Up</h1>
-          <input class="field" type="text" placeholder="Enter Username" id="username" name="username" maxlength='50'>
-          <input class="field" type="password" placeholder="Enter Password" id="password" name="password" onkeyup="validRepeat()" maxlength='50'>
-          <input class="field" type="password" placeholder="Repeat Password" id="repeatPw" name="repeatPw" onkeyup="validRepeat()" maxlength='50'>
-          <div class="constraints">
+                <input class="field" type="text" placeholder="Enter Username" id="username" name="username" maxlength='650' required>
+                <input class="field" type="password" placeholder="Enter Password" id="password" name="password" onkeyup="validRepeat()" maxlength='50' required>
+                <input class="field" type="password" placeholder="Repeat Password" id="repeatPw" name="repeatPw" onkeyup="validRepeat()" maxlength='50' required>          <div class="constraints">
             <p class = "matched" id = "matchedPw"> Passwords must match</p>
           </div>
           <button type="submit">Sign up!</button>

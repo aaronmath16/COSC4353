@@ -30,19 +30,19 @@
     <h1 class="heading">Client Profile</h1>
     <form class="fieldForm" action="/profile" method="POST">
         <label for="fullname">Full Name:<span class="required">*</span></label>
-        <input type="text" id="fullname" name="fullname" placeholder="John Doe" class="field" value = "<%= locals.fullname %>">
+        <input type="text" id="fullname" name="fullname" maxlength="50" placeholder="John Doe" required class="field" value = "<%= locals.fullname %>">
         
         <label for="address1">Address 1:<span class="required">*</span></label>
-        <input type="text" id="address1" name="address1" placeholder="123 Main St" class="field" value = "<%= locals.address1 %>">
+        <input type="text" id="address1" name="address1" maxlength="100" placeholder="123 Main St" required class="field" value = "<%= locals.address1 %>">
         
         <label for="address2">Address 2:</label>
-        <input type="text" id="address2" name="address2" placeholder="Apartment, suite, unit, building, floor, etc." class="field" value="<%= locals.address2 %>">
+        <input type="text" id="address2" name="address2" maxlength="100" placeholder="Apartment, suite, unit, building, floor, etc." class="field" value="<% locals.address2 %>">
         
         <label for="city">City:<span class="required">*</span></label>
-        <input type="text" id="city" name="city" placeholder="Anytown" class="field" value = "<%= locals.city %>">
+        <input type="text" id="city" name="city" placeholder="Anytown" class="field" value = "<%= locals.city %>" required>
         
         <label for="state">State:<span class="required">*</span></label>
-        <select id="state" name="state" class="field">
+        <select id="state" name="state" class="field" required>
             <option value="">Please Select</option>
             <option value="AL" <%= locals.state == "AL" ? 'selected' : '' %>>Alabama</option>
             <option value="AK" <%= locals.state == "AK" ? 'selected' : '' %>>Alaska</option>
@@ -98,7 +98,7 @@
         
         
         <label for="zipcode">Zipcode:<span class="required">*</span></label>
-        <input type="text" id="zipcode" name="zipcode" placeholder="12345" pattern="\d{5}(-\d{4})?" title="A 5 or 9 digit zipcode (5 digits or 5 digits-4 digits)" class="field" value = "<%= locals.zipcode %>">
+        <input type="text" id="zipcode" name="zipcode" maxlength="10" placeholder="12345" pattern="\d{5}(-\d{4})?" title="A 5 or 9 digit zipcode (5 digits or 5 digits-4 digits)" required class="field" value = "<%= locals.zipcode %>">
         
         <input type="submit" value="Submit">
     </form>
