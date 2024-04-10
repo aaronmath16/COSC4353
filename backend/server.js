@@ -71,11 +71,9 @@ db.run(`CREATE TABLE IF NOT EXISTS client_information (
 db.run(`CREATE TABLE IF NOT EXISTS quotes
     (quote_id INTEGER PRIMARY KEY AUTOINCREMENT,
     uid INTEGER REFERENCES user_credentials(uid),
+    gallons_requested INTEGER NOT NULL,
     delivery_date DATE NOT NULL,
-    address CHAR(100) NOT NULL,
-    city CHAR(100) NOT NULL,
-    state CHAR(2) NOT NULL,
-    zip INTEGER NOT NULL,
+    address CHAR(311) NOT NULL,
     total_price NUMERIC NOT NULL,
     fee NUMERIC NOT NULL
   )`);
