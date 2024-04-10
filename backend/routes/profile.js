@@ -5,6 +5,8 @@ const loggedOut = require('../passportauth').loggedOut
 const states = [ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY' ];
 const mockdb = require('../mockdb')
 const mockProfile = mockdb.profile
+const sqlite3 = require('sqlite3').verbose()
+
 
 var delivAddress = "614 Default Rd"
 
@@ -24,6 +26,36 @@ router.post('/',loggedIn,(req,res) =>{
     if (fullname == '' || address1 == '' || city == '' || state == '' || zipcode == ''){
         return res.render('profile.ejs',{error:'Missing input!', fullname: fullname, address1: address1, address2:address2, city: city, state: state, zipcode: zipcode})
     }
+
+    const db = new sqlite3.Database('data.db', (err) => {
+        if (err) {
+            console.error('Error connecting to database:', err.message);
+        }
+        else{
+            console.log('Connected to the database.');
+        }
+    });
+
+    const sql = 'INSERT into client_information ('fullname, address1, address2, city, state, zipcode) VALUES(?,?,?,?,?,?)'
+
+    db.run(sql, [name, address, address2, city, state, zipcode], (err) => {
+        if (err){
+            console.error('Error inserting info: ', err.message)
+        }
+        else{
+            console.log('Info inserted')
+        }
+    })
+
+    db.close((err) => {
+        if (err) {
+            console.error('Error closing database:', err.message);
+        }
+        else{
+            console.log('Database connection closed.');
+        }
+    });
+
     if (fullname.length > 50){
         error = "Name too long"
         return res.render('profile.ejs',{error:error, address1: address1, address2:address2, city: city, state: state, zipcode: zipcode})
