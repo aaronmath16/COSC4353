@@ -8,35 +8,35 @@ const sqlite3 = require('sqlite3').verbose()
 
 /*var tableEntries = mockhistory
 var tableHtml =''
+*/
 
+var tableHtml =''
 router.get('/',loggedIn,popHistory, (req,res) =>{        
     res.render('fuelhistory.ejs', {table: tableHtml})
 
-})*/
+})
 
 const db = require( "../runDb")
 
-/*const db = new sqlite3.Database('data.db', (err) => {
-    if (err) {
-      console.error('Error connecting to database:', err.message);
-    } else {
-      console.log('Connected to the database.');
-    }
-  });*/
 
-var tableHtml =''
+
+async function popHistory(req, res, next) {
 const sql = "SELECT * FROM quotes";
-db.all(sql, [], (err, rows) => {
+await db.all(sql, [], (err, rows) => {
     if (err) return console.error(err.message);
-
+    tableHtml = ''
     rows.forEach((row) => {
-        tableHtml +=  "</td><td>" + row.gallons_requested + 
+        console.log(row)
+        tableHtml +=  "<tr><td>" + row.gallons_requested + 
                 "</td><td>" + row.delivery_date + 
                 "</td><td>" + row.address + 
                 "</td><td> " + "$" + row.total_price + 
                 "</td><td>" + "$" + row.fee + "</td></tr>";
     });
+    console.log(tableHtml)
 });
+next()
+}
 
 
 /*function popHistory(req, res, next) {
