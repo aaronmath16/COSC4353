@@ -36,9 +36,9 @@ router.post('/',loggedIn,(req,res) =>{
         }
     });
 
-    const sql = 'INSERT into client_information (fullname, address1, address2, city, state, zip) VALUES(?,?,?,?,?,?)'
+    const sql = 'INSERT into client_information (name, address1, address2, city, state, zip) VALUES(?,?,?,?,?,?)'
 
-    db.run(sql, [name, address, address2, city, state, zipcode], (err) => {
+    db.run(sql, [fullname, address1, address2, city, state, zipcode], (err) => {
         if (err){
             console.error('Error inserting info: ', err.message)
         }
