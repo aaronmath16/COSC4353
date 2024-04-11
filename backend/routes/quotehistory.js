@@ -27,8 +27,11 @@ await db.all(sql, [], (err, rows) => {
     tableHtml = ''
     rows.forEach((row) => {
         console.log(row)
+        console.log(typeof row.delivery_date)
+        var date = new Date(parseInt(row.delivery_date))
+        var dateString = new Intl.DateTimeFormat('en-us').format(date)
         tableHtml +=  "<tr><td>" + row.gallons_requested + 
-                "</td><td>" + row.delivery_date + 
+                "</td><td>" + dateString +
                 "</td><td>" + row.address + 
                 "</td><td> " + "$" + row.total_price + 
                 "</td><td>" + "$" + row.fee + "</td></tr>";

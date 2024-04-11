@@ -9,6 +9,8 @@ var delivAddress = null
 
 router.get('/',loggedIn,(req,res) =>{
     const uid = req.user.uid
+    var suggPrice = 1.50
+    var totPrice = 0.0
 
     const sql = 'SELECT address1, address2, city, state, zip from client_information WHERE uid = ?'
 
@@ -19,7 +21,7 @@ router.get('/',loggedIn,(req,res) =>{
       delivAddress += row.address2 + ' '
       delivAddress += row.city + ' '
       delivAddress += row.state + ' '
-      delivAddress += zip
+      delivAddress += row.zip
     })
 
     res.render('quotePage.ejs', {error:'',delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
