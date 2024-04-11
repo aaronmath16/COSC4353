@@ -2,6 +2,42 @@ const express = require('express')
 const router = express.Router()
 const loggedIn = require('../passportauth').loggedIn
 const loggedOut = require('../passportauth').loggedOut
+const bcrypt = require('bcrypt')
+
+
+
+const sqlite3 = require('sqlite3').verbose();
+
+const db = new sqlite3.Database('data.db', (err) => {
+    if (err) {
+      console.error('Error connecting to database:', err.message);
+    } else {
+      console.log('Connected to the database.');
+    }
+  });
+
+db.run("PRAGMA foreign_keys = ON;")
+
+const createUser = async (username,password) =>{
+    //use bcrypt to hash pw
+    //send user and hashed pw into the DB
+
+    const hashedPw = await bcrypt.hash(password,10)
+    const result = db.run(`INSERT INTO user_credentials(username,password) VALUES ($1,$2)`,[username,hashedPw],function(err) {
+        if (err) {
+          return console.error('Error inserting:', err.message);
+        }
+        console.log(`insert successful!`);
+      })
+    //const result = await pool.query(`INSERT INTO user_credentials(username,password) VALUES ($1,$2)`,[username,hashedPw])
+    if (result.rowCount == 0){
+        return false
+    }
+    return result.rows[0]
+}
+
+
+
 router.get('/',loggedOut,(req,res) =>{
     res.render('registerUser')
 })
@@ -32,7 +68,8 @@ router.post('/',loggedOut,(req,res) =>{
         return res.render('registerUser.ejs', {error : "PW too long"})
     }
 
-    res.render('profile.ejs',{message:"Registration Sucessful!  Please fill in your profile details.", error:''})
+    createUser(username,password)
+    res.render('login.ejs',{message:"Registration Sucessful!  Please log in and fill in your profile details.", error:''})
 })
 
 

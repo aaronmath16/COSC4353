@@ -49,7 +49,8 @@ const db = new sqlite3.Database('data.db', (err) => {
       console.log('Connected to the database.');
     }
   });
-  
+  db.run("PRAGMA foreign_keys = ON;")
+
   // Create tables if not exist
 db.run(`CREATE TABLE IF NOT EXISTS user_credentials
     (uid INTEGER PRIMARY KEY,
