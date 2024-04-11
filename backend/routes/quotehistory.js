@@ -6,13 +6,12 @@ const mockdb = require('../mockdb')
 const mockhistory = mockdb.history
 const sqlite3 = require('sqlite3').verbose()
 
-var tableEntries = mockhistory
-var tableHtml = ''
+/*var tableEntries = mockhistory*/
 
-router.get('/',loggedIn,popHistory, (req,res) =>{        
+/*router.get('/',loggedIn,popHistory, (req,res) =>{        
     res.render('fuelhistory.ejs', {table: tableHtml})
 
-})
+})*/
 
 const db = new sqlite3.Database('data.db', (err) => {
     if (err) {
@@ -22,7 +21,7 @@ const db = new sqlite3.Database('data.db', (err) => {
     }
   });
 
-tableHtml =''
+var tableHtml =''
 
 db.all(sql, [], (err, rows) => {
     if (err) return console.error(err.message);
