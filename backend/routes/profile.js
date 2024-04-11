@@ -36,8 +36,8 @@ router.post('/',loggedIn,(req,res) =>{
         }
     });
 
-    const Insertsql = 'INSERT into client_information (fullname, address1, address2, city, state, zip) VALUES(?,?,?,?,?,?)'
-    const Updatesql = 'UPDATE client_information SET fullname = ?, address1 = ?, address2 = ?, city = ?, state = ?, zip = ? WHERE condition_column = ?';
+    const Insertsql = 'INSERT into client_information (name, address1, address2, city, state, zip) VALUES(?,?,?,?,?,?)'
+    const Updatesql = 'UPDATE client_information SET name = ?, address1 = ?, address2 = ?, city = ?, state = ?, zip = ? WHERE condition_column = ?';
 
     db.run(Insertsql, [name, address, address2, city, state, zipcode], (err) => {
         if (err){
