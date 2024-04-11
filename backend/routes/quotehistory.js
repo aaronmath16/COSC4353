@@ -28,12 +28,11 @@ db.all(sql, [], (err, rows) => {
     if (err) return console.error(err.message);
 
     rows.forEach((row) => {
-        tableHtml += "<tr><td>" + entry.name + 
-                "</td><td>" + entry.gallonsRequested + 
-                "</td><td>" + entry.deliveryDate + 
-                "</td><td>" + entry.deliveryAddress + 
-                "</td><td> " + "$" + entry.suggestedPrice + 
-                "</td><td>" + "$" + entry.total + "</td></tr>";
+        tableHtml +=  "</td><td>" + row.gallons_requested + 
+                "</td><td>" + row.delivery_date + 
+                "</td><td>" + row.address + 
+                "</td><td> " + "$" + row.total_price + 
+                "</td><td>" + "$" + row.fee + "</td></tr>";
     });
 });
 
