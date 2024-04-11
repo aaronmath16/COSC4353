@@ -1,5 +1,5 @@
 const express = require('express')
-const sqlite3 = require('sqlite3').verbose()
+//const sqlite3 = require('sqlite3').verbose()
 const app = express()
 const passport = require('passport')
 const flash = require('express-flash')
@@ -7,6 +7,7 @@ const session = require('express-session')
 app.use(express.urlencoded({extended:true}))
 app.set("view engine", "ejs")
 app.use(flash());
+const db = require( "./runDb")
 
 app.use(session({
     secret:"temp",
@@ -42,14 +43,14 @@ app.use('/quotePage',quoteRouter)
 app.use('/logout',logoutRouter)
 
 // Connect to the SQLite database
-const db = new sqlite3.Database('data.db', (err) => {
+/* const db = new sqlite3.Database('data.db', (err) => {
     if (err) {
       console.error('Error connecting to database:', err.message);
     } else {
       console.log('Connected to the database.');
     }
   });
-  db.run("PRAGMA foreign_keys = ON;")
+  db.run("PRAGMA foreign_keys = ON;") */
 
   // Create tables if not exist
 db.run(`CREATE TABLE IF NOT EXISTS user_credentials
@@ -85,14 +86,15 @@ db.run(`CREATE TABLE IF NOT EXISTS states
   )`);
 
 
-
+  //find way to close db properly
+/* 
 db.close((err) => {
     if (err) {
       console.error('Error closing database:', err.message);
     } else {
       console.log('Database connection closed.');
     }
-  });
+  }); */
 //moved to a new file so testing can be done without hosting the server.
 //app.listen(3000)
 //console.log("Server hosted at port 3000")

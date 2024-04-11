@@ -27,44 +27,6 @@ router.post('/',loggedIn,(req,res) =>{
         return res.render('profile.ejs',{error:'Missing input!', fullname: fullname, address1: address1, address2:address2, city: city, state: state, zipcode: zipcode})
     }
 
-    const db = new sqlite3.Database('data.db', (err) => {
-        if (err) {
-            console.error('Error connecting to database:', err.message);
-        }
-        else{
-            console.log('Connected to the database.');
-        }
-    });
-
-    const Insertsql = 'INSERT into client_information (name, address1, address2, city, state, zip) VALUES(?,?,?,?,?,?)'
-    const Updatesql = 'UPDATE client_information SET name = ?, address1 = ?, address2 = ?, city = ?, state = ?, zip = ? WHERE condition_column = ?';
-
-    db.run(Insertsql, [fullname, address1, address2, city, state, zipcode], (err) => {
-        if (err){
-            console.error('Error inserting info: ', err.message)
-        }
-        else{
-            console.log('Info inserted')
-        }
-    })
-
-    db.run(Updatesql, [fullname, address1, address2, city, state, zipcode], (err) => {
-        if (err){
-            console.error('Error inserting info: ', err.message)
-        }
-        else{
-            console.log('Info inserted')
-        }
-    })
-
-    db.close((err) => {
-        if (err) {
-            console.error('Error closing database:', err.message);
-        }
-        else{
-            console.log('Database connection closed.');
-        }
-    });
 
     if (fullname.length > 50){
         error = "Name too long"
@@ -90,6 +52,49 @@ router.post('/',loggedIn,(req,res) =>{
         error = "Invalid zip code"
         return res.render('profile.ejs',{error:error, fullname: fullname, address1: address1, address2:address2, city: city, state: state})
     }
+
+    const db = new sqlite3.Database('data.db', (err) => {
+        if (err) {
+            console.error('Error connecting to database:', err.message);
+        }
+        else{
+            console.log('Connected to the database.');
+        }
+    });
+
+
+    //TODO UID/client_id (schema redesign?) and also only run one of these, maybe a try block or a simple check for existing values
+    const Insertsql = 'INSERT into client_information (name, address1, address2, city, state, zip) VALUES(?,?,?,?,?,?)'
+    const Updatesql = 'UPDATE client_information SET name = ?, address1 = ?, address2 = ?, city = ?, state = ?, zip = ? WHERE uid = ?';
+
+    db.run(Insertsql, [fullname, address1, address2, city, state, zipcode], (err) => {
+        if (err){
+            console.error('Error inserting info: ', err.message)
+        }
+        else{
+            console.log('Info inserted')
+        }
+    })
+
+    db.run(Updatesql, [fullname, address1, address2, city, state, zipcode,req.user.uid], (err) => {
+        if (err){
+            console.error('Error updating info: ', err.message)
+        }
+        else{
+            console.log('Info inserted')
+        }
+    })
+
+    db.close((err) => {
+        if (err) {
+            console.error('Error closing database:', err.message);
+        }
+        else{
+            console.log('Database connection closed.');
+        }
+    });
+
+
     return res.render('quotePage.ejs', {delivAddress: delivAddress})
 })
 

@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt')
 
 
 
-const sqlite3 = require('sqlite3').verbose();
+/* const sqlite3 = require('sqlite3').verbose();
 
 const db = new sqlite3.Database('data.db', (err) => {
     if (err) {
@@ -17,23 +17,29 @@ const db = new sqlite3.Database('data.db', (err) => {
   });
 
 db.run("PRAGMA foreign_keys = ON;")
+ */
+const db = require( "../runDb")
 
 const createUser = async (username,password) =>{
     //use bcrypt to hash pw
     //send user and hashed pw into the DB
 
     const hashedPw = await bcrypt.hash(password,10)
-    const result = db.run(`INSERT INTO user_credentials(username,password) VALUES ($1,$2)`,[username,hashedPw],function(err) {
+    const result = db.all(`INSERT INTO user_credentials(username,password) VALUES ($1,$2)`,[username,hashedPw],function(err,rows) {
         if (err) {
           return console.error('Error inserting:', err.message);
         }
-        console.log(`insert successful!`);
+        if(rows.length == 0){
+            return false
+        }
+        else{
+            console.log(`insert successful!`);
+
+            return rows[0]
+        }
       })
     //const result = await pool.query(`INSERT INTO user_credentials(username,password) VALUES ($1,$2)`,[username,hashedPw])
-    if (result.rowCount == 0){
-        return false
-    }
-    return result.rows[0]
+
 }
 
 

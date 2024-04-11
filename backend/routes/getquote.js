@@ -14,7 +14,7 @@ router.get('/',loggedIn,(req,res) =>{
 
 router.post('/',loggedIn,(req,res) =>{
     //clientside validations go here Consult the register js route for an example
-    const uid = 1
+    const uid = req.user.uid
     const galReq = req.body.gallonsRequested
     const delivDate = new Date(req.body.deliveryDate)
     const delivAddress = req.body.deliveryAddress
@@ -22,10 +22,13 @@ router.post('/',loggedIn,(req,res) =>{
     const totPrice = req.body.totalDue
 
     if(galReq == ''){
+      console.log('failed gals')
         return res.redirect(302,'quotePage.ejs', {error: "Missing Gallons Requested!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
     }
     //Potentially add an extra check here for date range
     else if(isNaN(delivDate.getDate())){
+      console.log('failed date')
+
         res.redirect(302,'quotePage.ejs', {error: "Invalid date!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
     }
     //Send to Database here!
