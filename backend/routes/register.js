@@ -20,6 +20,34 @@ db.run("PRAGMA foreign_keys = ON;")
  */
 const db = require( "../runDb")
 
+
+const existsUser = (username) =>{
+    //check if the user exists
+    //wrapped in a promise + try catch block because sqlite doesnt seem to support async properly
+    return new Promise(function(resolve,reject){
+    try{
+      db.all(`SELECT * FROM user_credentials WHERE username = $1`,[username],async function(err,rows) {
+        if (err) {
+          reject(console.error('Error getting user:', err.message))
+        }
+        if (rows.length ==0){
+          console.log(`User does not exist`);
+
+          resolve(false)
+        }else{
+          //console.log(rows[0])
+          console.log(`User exists`);
+          resolve(rows[0])
+          
+        }
+      })}catch(err){
+        reject(err)
+
+      }
+}
+    )}
+
+
 const createUser = async (username,password) =>{
     //use bcrypt to hash pw
     //send user and hashed pw into the DB
@@ -62,8 +90,7 @@ router.post('/',loggedOut,(req,res) =>{
      if (username in GETUSERSFROMDB){
         return res.render('registerUser.ejs',{error:'Username in use!'})
     }     */
-    //hardcoded version of above
-    if (username =="testing"){
+    if (existsUser(username)){
         return res.render('registerUser.ejs',{error:'Username in use!'})
     }     
     if (username.length > 50){

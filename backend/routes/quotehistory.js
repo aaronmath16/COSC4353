@@ -21,10 +21,12 @@ const db = require( "../runDb")
 
 
 async function popHistory(req, res, next) {
-const sql = "SELECT * FROM quotes";
-await db.all(sql, [], (err, rows) => {
-    if (err) return console.error(err.message);
+const sql = "SELECT * FROM quotes WHERE uid = ?";
+//wrap db calls in promises to ensure things are completed on load in.
+await new Promise((resolve,reject) =>{ db.all(sql, [req.user.uid], (err, rows) => {
+    if (err) reject( console.error(err.message));
     tableHtml = ''
+    resolve(
     rows.forEach((row) => {
         console.log(row)
         console.log(typeof row.delivery_date)
@@ -35,9 +37,10 @@ await db.all(sql, [], (err, rows) => {
                 "</td><td>" + row.address + 
                 "</td><td> " + "$" + row.total_price + 
                 "</td><td>" + "$" + row.fee + "</td></tr>";
-    });
+    }))
     console.log(tableHtml)
 });
+})
 next()
 }
 

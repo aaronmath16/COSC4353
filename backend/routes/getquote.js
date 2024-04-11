@@ -7,22 +7,51 @@ const loggedOut = require('../passportauth').loggedOut
 
 var delivAddress = null
 
-router.get('/',loggedIn,(req,res) =>{
+
+const existsUid = (uid) =>{
+  //check if the user exists
+  //wrapped in a promise + try catch block because sqlite doesnt seem to support async properly
+  return new Promise(function(resolve,reject){
+  try{
+    db.all(`SELECT address1, address2, city, state, zip from client_information WHERE uid = ?`,[uid],async function(err,rows) {
+      if (err) {
+        reject(console.error('Error getting user:', err.message))
+      }
+      if (rows.length ==0){
+        console.log(`User does not exist`);
+
+        resolve(false)
+      }else{
+        //console.log(rows[0])
+        console.log(`User exists`);
+        resolve(rows[0])
+      }
+    })}catch(err){
+      reject(err)
+
+    }
+}
+  )}
+
+
+router.get('/',loggedIn,async (req,res) =>{
     const uid = req.user.uid
     var suggPrice = 1.50
     var totPrice = 0.0
 
     const sql = 'SELECT address1, address2, city, state, zip from client_information WHERE uid = ?'
-
-    db.get(sql, [uid], (err, row)=>{
-      if (err) console.error(err.message)
+    row = await existsUid(uid)
+      if (!row) {console.error("Error finding user profile")
+                return res.render('profile.ejs',{error:"Please set your profile information before submitting a quote!"})}
+      else{
+        console.log(row)
    
       delivAddress = row.address1 + ' '
       delivAddress += row.address2 + ' '
       delivAddress += row.city + ' '
       delivAddress += row.state + ' '
       delivAddress += row.zip
-    })
+      }
 
     res.render('quotePage.ejs', {error:'',delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
 })
