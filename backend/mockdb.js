@@ -8,20 +8,18 @@ const mockusers = [
 
 const mockhistory = [
     {
-        name : "Aaron",
-        gallonsRequested : 20,
-        deliveryDate : "1/21/22",
-        deliveryAddress : "University of Houston",
-        suggestedPrice : 100,
-        total : 200
+        gallons_requested : 50,
+        delivery_date : "1/21/22",
+        address : "University of Houston",
+        total_price : 400,
+        fee : 20
     },
     {
-        name : "Aliyan",
-        gallonsRequested : 15,
-        deliveryDate : "4/30/25",
-        deliveryAddress : "Houston",
-        suggestedPrice : 30,
-        total : 60
+        gallons_requested : 15,
+        delivery_date : "4/30/25",
+        address  : "Houston",
+        total_price : 100,
+        fee : 5
     }
 ]
 
