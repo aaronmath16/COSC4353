@@ -3,16 +3,18 @@ const router = express.Router()
 const loggedIn = require('../passportauth').loggedIn
 const loggedOut = require('../passportauth').loggedOut
 const mockdb = require('../mockdb')
-const mockhistory = mockdb.history
+//const mockhistory = mockdb.history
 const sqlite3 = require('sqlite3').verbose()
 
-var tableEntries = mockhistory
+/*var tableEntries = mockhistory
 var tableHtml =''
 
 router.get('/',loggedIn,popHistory, (req,res) =>{        
     res.render('fuelhistory.ejs', {table: tableHtml})
 
-})
+})*/
+
+const db = require( "../runDb")
 
 /*const db = new sqlite3.Database('data.db', (err) => {
     if (err) {
@@ -22,9 +24,9 @@ router.get('/',loggedIn,popHistory, (req,res) =>{
     }
   });*/
 
-
-
-/*db.all(sql, [], (err, rows) => {
+var tableHtml =''
+const sql = "SELECT * FROM quotes";
+db.all(sql, [], (err, rows) => {
     if (err) return console.error(err.message);
 
     rows.forEach((row) => {
@@ -34,10 +36,10 @@ router.get('/',loggedIn,popHistory, (req,res) =>{
                 "</td><td> " + "$" + row.total_price + 
                 "</td><td>" + "$" + row.fee + "</td></tr>";
     });
-});*/
+});
 
 
-function popHistory(req, res, next) {
+/*function popHistory(req, res, next) {
     // Clear existing table rows
     tableHtml = ''
 
@@ -55,7 +57,7 @@ function popHistory(req, res, next) {
         res.redirect('quotePage.ejs',{error: "Error Fetching fuel history."})
     }
     next()
-}
+}*/
 
 
 /*db.close((err) => {
