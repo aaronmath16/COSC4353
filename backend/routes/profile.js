@@ -1,4 +1,5 @@
 const express = require('express')
+const db = require( "../runDb")
 const router = express.Router()
 const loggedIn = require('../passportauth').loggedIn
 const loggedOut = require('../passportauth').loggedOut
@@ -8,7 +9,7 @@ const mockProfile = mockdb.profile
 const sqlite3 = require('sqlite3').verbose()
 
 
-var delivAddress = "614 Default Rd"
+var delivAddress = null
 
 var mockprofile = mockProfile[0]
 var name = null
@@ -22,6 +23,7 @@ router.get('/',loggedIn, Info, (req,res) =>{
 })
 
 router.post('/',loggedIn,(req,res) =>{
+    const uid = req.user.uid
     const {fullname , address1 , address2, city, state , zipcode} = req.body
     if (fullname == '' || address1 == '' || city == '' || state == '' || zipcode == ''){
         return res.render('profile.ejs',{error:'Missing input!', fullname: fullname, address1: address1, address2:address2, city: city, state: state, zipcode: zipcode})
@@ -53,21 +55,23 @@ router.post('/',loggedIn,(req,res) =>{
         return res.render('profile.ejs',{error:error, fullname: fullname, address1: address1, address2:address2, city: city, state: state})
     }
 
-    const db = new sqlite3.Database('data.db', (err) => {
+    delivAddress = address1 + ' ' + address2 + ' ' + city + ' ' + state + ' ' + zipcode
+
+    /*const db = new sqlite3.Database('data.db', (err) => {
         if (err) {
             console.error('Error connecting to database:', err.message);
         }
         else{
             console.log('Connected to the database.');
         }
-    });
+    });*/
 
 
     //TODO UID/client_id (schema redesign?) and also only run one of these, maybe a try block or a simple check for existing values
-    const Insertsql = 'INSERT into client_information (name, address1, address2, city, state, zip) VALUES(?,?,?,?,?,?)'
+    const Insertsql = 'INSERT into client_information (uid, name, address1, address2, city, state, zip) VALUES(?, ?,?,?,?,?,?)'
     const Updatesql = 'UPDATE client_information SET name = ?, address1 = ?, address2 = ?, city = ?, state = ?, zip = ? WHERE uid = ?';
 
-    db.run(Insertsql, [fullname, address1, address2, city, state, zipcode], (err) => {
+    db.run(Insertsql, [uid, fullname, address1, address2, city, state, zipcode], (err) => {
         if (err){
             console.error('Error inserting info: ', err.message)
         }
@@ -76,23 +80,23 @@ router.post('/',loggedIn,(req,res) =>{
         }
     })
 
-    db.run(Updatesql, [fullname, address1, address2, city, state, zipcode,req.user.uid], (err) => {
+    db.run(Updatesql, [fullname, address1, address2, city, state, zipcode, req.user.uid], (err) => {
         if (err){
             console.error('Error updating info: ', err.message)
         }
         else{
-            console.log('Info inserted')
+            console.log('Info updated')
         }
     })
 
-    db.close((err) => {
+    /*db.close((err) => {
         if (err) {
             console.error('Error closing database:', err.message);
         }
         else{
             console.log('Database connection closed.');
         }
-    });
+    });*/
 
 
     return res.render('quotePage.ejs', {delivAddress: delivAddress})

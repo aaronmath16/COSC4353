@@ -1,14 +1,27 @@
 const express = require('express')
 const sqlite3 = require('sqlite3').verbose()
+const db = require( "../runDb")
 const router = express.Router()
 const loggedIn = require('../passportauth').loggedIn
 const loggedOut = require('../passportauth').loggedOut
 
-var delivAddress = "614 Default Rd"
-var suggPrice = null
-var totPrice = null
+var delivAddress = null
 
 router.get('/',loggedIn,(req,res) =>{
+    const uid = req.user.uid
+
+    const sql = 'SELECT address1, address2, city, state, zip from client_information WHERE uid = ?'
+
+    db.get(sql, [uid], (err, row)=>{
+      if (err) console.error(err.message)
+   
+      delivAddress = row.address1 + ' '
+      delivAddress += row.address2 + ' '
+      delivAddress += row.city + ' '
+      delivAddress += row.state + ' '
+      delivAddress += zip
+    })
+
     res.render('quotePage.ejs', {error:'',delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
 })
 
@@ -18,8 +31,7 @@ router.post('/',loggedIn,(req,res) =>{
     const galReq = req.body.gallonsRequested
     const delivDate = new Date(req.body.deliveryDate)
     const delivAddress = req.body.deliveryAddress
-    const suggPrice = req.body.quotePrice
-    const totPrice = req.body.totalDue
+    const suggPrice = 1.50
 
     if(galReq == ''){
       console.log('failed gals')
@@ -33,13 +45,15 @@ router.post('/',loggedIn,(req,res) =>{
     }
     //Send to Database here!
 
-    const db = new sqlite3.Database('data.db', (err) => {
+    const totPrice = galReq * suggPrice
+
+    /*const db = new sqlite3.Database('data.db', (err) => {
         if (err) {
           console.error('Error connecting to database:', err.message);
         } else {
           console.log('Connected to the database.');
         }
-      });
+      });*/
 
       const sql = 'INSERT into quotes (uid, gallons_requested, delivery_date, address, total_price, fee) VALUES(?,?,?,?,?,?)'
 
@@ -51,13 +65,13 @@ router.post('/',loggedIn,(req,res) =>{
         }
       })
 
-      db.close((err) => {
+      /*db.close((err) => {
         if (err) {
           console.error('Error closing database:', err.message);
         } else {
           console.log('Database connection closed.');
         }
-      });
+      });*/
 
     console.log('valid quote!')
     return res.render('quotePage.ejs', {message:"Quote will be sent to Database!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
