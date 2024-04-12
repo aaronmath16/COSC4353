@@ -18,9 +18,49 @@ var address2 = null
 var city = null
 var state = null
 var zipcode = null
-router.get('/',loggedIn, Info, (req,res) =>{
-    res.render('profile', {error: '', fullname: name, address1:address, address2: address2, city: city, state: state, zipcode: zipcode})
-})
+var userExists = false
+
+const existsUid = (uid) =>{
+    //check if the user exists
+    //wrapped in a promise + try catch block because sqlite doesnt seem to support async properly
+    return new Promise(function(resolve,reject){
+    try{
+      db.all(`SELECT * from client_information WHERE uid = ?`,[uid],async function(err,rows) {
+        if (err) {
+          reject(console.error('Error getting user:', err.message))
+        }
+        if (rows.length ==0){
+          console.log(`User does not exist`);
+            userExists = false;
+          resolve(false)
+        }else{
+          //console.log(rows[0])
+          console.log(`User exists`);
+          userExists = true;
+          resolve(rows[0])
+        }
+      })}catch(err){
+        reject(err)
+      }
+  }
+    )}
+
+router.get('/',loggedIn, Info, async (req,res) =>{
+
+    const uid = req.user.uid
+
+    const sql = 'SELECT * from client_information WHERE uid = ?'
+    row = await existsUid(uid)
+      if (!row) {console.error("Error finding user profile")
+                return res.render('profile.ejs',{error:"Please set your profile information before submitting a quote!"})}
+      else{
+        console.log(row)
+      }
+    res.render('profile', {error: '', fullname:row.name, address1:row.address1, address2: row.address2, city: row.city, state: row.state, zipcode: row.zip})
+
+
+    })
+
 
 router.post('/',loggedIn,(req,res) =>{
     const uid = req.user.uid
@@ -70,24 +110,29 @@ router.post('/',loggedIn,(req,res) =>{
     //TODO UID/client_id (schema redesign?) and also only run one of these, maybe a try block or a simple check for existing values
     const Insertsql = 'INSERT into client_information (uid, name, address1, address2, city, state, zip) VALUES(?, ?,?,?,?,?,?)'
     const Updatesql = 'UPDATE client_information SET name = ?, address1 = ?, address2 = ?, city = ?, state = ?, zip = ? WHERE uid = ?';
+    
+    if (!userExists){
+        db.run(Insertsql, [uid, fullname, address1, address2, city, state, zipcode], (err) => {
+            if (err){
+                console.error('Error inserting info: ', err.message)
+            }
+            else{
+                console.log('Info inserted')
+            }
+        })
+    }
 
-    db.run(Insertsql, [uid, fullname, address1, address2, city, state, zipcode], (err) => {
-        if (err){
-            console.error('Error inserting info: ', err.message)
-        }
-        else{
-            console.log('Info inserted')
-        }
-    })
+    else{
+        db.run(Updatesql, [fullname, address1, address2, city, state, zipcode, req.user.uid], (err) => {
+            if (err){
+                console.error('Error updating info: ', err.message)
+            }
+            else{
+                console.log('Info updated')
+            }
+        })
+    }
 
-    db.run(Updatesql, [fullname, address1, address2, city, state, zipcode, req.user.uid], (err) => {
-        if (err){
-            console.error('Error updating info: ', err.message)
-        }
-        else{
-            console.log('Info updated')
-        }
-    })
 
     /*db.close((err) => {
         if (err) {

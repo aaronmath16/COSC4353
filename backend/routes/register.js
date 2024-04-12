@@ -26,7 +26,7 @@ const existsUser = (username) =>{
     //wrapped in a promise + try catch block because sqlite doesnt seem to support async properly
     return new Promise(function(resolve,reject){
     try{
-      db.all(`SELECT * FROM user_credentials WHERE username = $1`,[username],async function(err,rows) {
+      db.all(`SELECT * FROM user_credentials WHERE username = ?`,[username],async function(err,rows) {
         if (err) {
           reject(console.error('Error getting user:', err.message))
         }
@@ -76,7 +76,7 @@ router.get('/',loggedOut,(req,res) =>{
     res.render('registerUser')
 })
 
-router.post('/',loggedOut,(req,res) =>{
+router.post('/',loggedOut, async (req,res) =>{
     console.log(req.body)
     const {username , password , repeatPw} = req.body
     console.log(username)
@@ -90,7 +90,7 @@ router.post('/',loggedOut,(req,res) =>{
      if (username in GETUSERSFROMDB){
         return res.render('registerUser.ejs',{error:'Username in use!'})
     }     */
-    if (existsUser(username)){
+    if (await existsUser(username)){
         return res.render('registerUser.ejs',{error:'Username in use!'})
     }     
     if (username.length > 50){
