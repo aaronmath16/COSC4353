@@ -30,7 +30,7 @@ await new Promise((resolve,reject) =>{ db.all(sql, [req.user.uid], (err, rows) =
     rows.forEach((row) => {
         console.log(row)
         console.log(typeof row.delivery_date)
-        var date = new Date(parseInt(row.delivery_date))
+        var date = new Date(row.delivery_date)
         var dateString = new Intl.DateTimeFormat('en-us').format(date)
         tableHtml +=  "<tr><td>" + row.gallons_requested + 
                 "</td><td>" + dateString +
