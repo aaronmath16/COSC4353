@@ -6,6 +6,23 @@ const loggedIn = require('../passportauth').loggedIn
 const loggedOut = require('../passportauth').loggedOut
 
 var delivAddress = null
+const runDb = (sql,inputs) =>{
+  //check if the user exists
+  //wrapped in a promise + try catch block because sqlite doesnt seem to support async properly
+  return new Promise(function(resolve,reject){
+  try{
+    db.run(sql,inputs,async function(err) {
+      if (err) {
+        reject(console.error('Error:', err.message))
+      }
+      else{
+        resolve("Sucess!")
+      }
+    })}catch(err){
+      reject(err)
+    }
+}
+  )}
 
 
 const existsUid = (uid) =>{
@@ -56,27 +73,28 @@ router.get('/',loggedIn,async (req,res) =>{
     res.render('quotePage.ejs', {error:'',delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
 })
 
-router.post('/',loggedIn,(req,res) =>{
+router.post('/',loggedIn,async(req,res) =>{
     //clientside validations go here Consult the register js route for an example
     const uid = req.user.uid
     const galReq = req.body.gallonsRequested
-    const delivDate = new Date(req.body.deliveryDate)
+
+    const delivDate =  req.body.deliveryDate
+    console.log(`DELIVERY DATE IS ${delivDate},${req.body.deliveryDate}`)
     const delivAddress = req.body.deliveryAddress
     const suggPrice = 1.50
+    const totPrice = galReq * suggPrice
 
     if(galReq == ''){
       console.log('failed gals')
         return res.redirect(302,'quotePage.ejs', {error: "Missing Gallons Requested!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
     }
     //Potentially add an extra check here for date range
-    else if(isNaN(delivDate.getDate())){
+    else if(isNaN(new Date(delivDate))){
       console.log('failed date')
-
-        res.redirect(302,'quotePage.ejs', {error: "Invalid date!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
+      return res.redirect(302,'quotePage.ejs', {error: "Invalid date!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
     }
     //Send to Database here!
 
-    const totPrice = galReq * suggPrice
 
     /*const db = new sqlite3.Database('data.db', (err) => {
         if (err) {
@@ -88,13 +106,15 @@ router.post('/',loggedIn,(req,res) =>{
 
       const sql = 'INSERT into quotes (uid, gallons_requested, delivery_date, address, total_price, fee) VALUES(?,?,?,?,?,?)'
 
-      db.run(sql, [uid, galReq, delivDate, delivAddress, totPrice, suggPrice], (err)=>{
+/*       db.run(sql, [uid, galReq, delivDate, delivAddress, totPrice, suggPrice], (err)=>{
         if (err){
             console.error('Error inserting quote: ', err.message)
         }else{
             console.log('Quote inserted.')
         }
       })
+ */
+      await runDb(sql,[uid, galReq, delivDate, delivAddress, totPrice, suggPrice])
 
       /*db.close((err) => {
         if (err) {
