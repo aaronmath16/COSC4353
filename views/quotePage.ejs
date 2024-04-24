@@ -3,7 +3,7 @@
         <meta charset="UTF-8">
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
         crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="theme.css">
+        <link rel="stylesheet" href="/theme.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     </head>
     <body>
@@ -24,14 +24,15 @@
                     <%= message %>
                     <% } %>
             </div>
-            <form action= "/quotePage" class="fieldForm" method="POST">
+            <form action= "/quotePage" class="fieldForm" id="quoteForm" method="POST">
                 <h2 class="heading">Get a Quote:</h1>
-                <input class="field" type="number" name="gallonsRequested" id="gallonsRequested" required placeholder="Gallons Requested">
+                <input class="field" type="number" name="gallonsRequested" id="gallonsRequested" required placeholder="Gallons Requested" value="<%= locals.gallonsRequested%>">
                 <input class="field" type="text" name="deliveryAddress" id="deliveryAddress" readonly placeholder="Delivery Address" value="<%= locals.delivAddress%>">
-                <input class="field" type="date" name="deliveryDate" id="deliveryDate" placeholder="Delivery Date" required>
-                <input class="field" type="number" name="quotePrice" id="quotePrice" readonly placeholder="Price Per Gallon. Will Calculate in Fuel Quote Class" value="<% locals.suggPrice%>">
-                <input class="field" type="number" name="totalDue" id="totalDue" readonly placeholder="Total Amount Due.  Will Calculate in Fuel Quote Class" value="<% locals.totPrice%>">
-                <button type="submit">Save Quote</button>
+                <input class="field" type="date" name="deliveryDate" id="deliveryDate" placeholder="Delivery Date" required value="<%= locals.deliveryDate%>">
+                <input class="field" type="number" name="quotePrice" id="quotePrice" readonly placeholder="Price Per Gallon. Will Calculate in Fuel Quote Class" value="<%= typeof locals.suggPrice == 'undefined' ? locals.suggPrice : locals.suggPrice.toFixed(2)%>">
+                <input class="field" type="number" name="totalDue" id="totalDue" readonly placeholder="Total Amount Due.  Will Calculate in Fuel Quote Class" value="<%= typeof locals.totPrice == 'undefined' ? locals.totPrice : locals.totPrice.toFixed(2)%>">
+                <button type="submit" form="quoteForm" formaction="/quotePage/getQuoted">Get Quoted</button>
+                <button type="submit" form="quoteForm" formaction="/quotePage/saveQuote">Save Quote</button>
             </form>
         </div>
     </body>

@@ -1,3 +1,4 @@
+const FuelPricing = require('../fuelquote.js')
 const express = require('express')
 const sqlite3 = require('sqlite3').verbose()
 const db = require( "../runDb")
@@ -50,11 +51,34 @@ const existsUid = (uid) =>{
 }
   )}
 
+const existsHist = (uid) =>{
+  //check if the client has quote history
+  //wrapped in a promise + try catch block because sqlite doesnt seem to support async properly
+  return new Promise(function(resolve,reject){
+  try{
+    db.all(`SELECT * from quotes WHERE uid = ?`,[uid],async function(err,rows) {
+      if (err) {
+        reject(console.error('Error getting user:', err.message))
+      }
+      if (rows.length ==0){
+        console.log(`History does not exist`);
+
+        resolve(false)
+      }else{
+        //console.log(rows[0])
+        console.log(`History exists`);
+        resolve(true)
+      }
+    })}catch(err){
+      reject(err)
+
+    }
+}
+  )}
 
 router.get('/',loggedIn,async (req,res) =>{
     const uid = req.user.uid
-    var suggPrice = 1.50
-    var totPrice = 0.0
+    message = null
 
     const sql = 'SELECT address1, address2, city, state, zip from client_information WHERE uid = ?'
     row = await existsUid(uid)
@@ -62,7 +86,7 @@ router.get('/',loggedIn,async (req,res) =>{
                 return res.render('profile.ejs',{error:"Please set your profile information before submitting a quote!"})}
       else{
         console.log(row)
-   
+
       delivAddress = row.address1 + ' '
       delivAddress += row.address2 + ' '
       delivAddress += row.city + ' '
@@ -70,10 +94,46 @@ router.get('/',loggedIn,async (req,res) =>{
       delivAddress += row.zip
       }
 
-    res.render('quotePage.ejs', {error:'',delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
+    res.render('quotePage.ejs', {error:'', delivAddress: delivAddress})
 })
 
-router.post('/',loggedIn,async(req,res) =>{
+router.post('/getQuoted', loggedIn, async(req, res) =>{
+  const uid = req.user.uid
+  const galReq = req.body.gallonsRequested
+  console.log(galReq)
+  const delivDate = req.body.deliveryDate
+  suggPrice = 0.00
+  totPrice = 0.00
+  state = ''
+  histExists = false
+
+  if(galReq == ''){
+    console.log('failed gals')
+      return res.redirect(302,'quotePage.ejs', {error: "Missing Gallons Requested!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
+  }
+  //Potentially add an extra check here for date range
+  else if(isNaN(new Date(delivDate))){
+    console.log('failed date')
+    return res.redirect(302,'quotePage.ejs', {error: "Invalid date!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
+  }
+
+  row = await existsUid(uid)
+  if (!row) {console.error("Error finding user profile")
+      return res.render('profile.ejs',{error:"Please set your profile information before submitting a quote!"})}
+  else{
+    state = row.state
+  }
+
+  histExists = await existsHist(uid)
+  pricing = new FuelPricing(uid, galReq, state, histExists)
+  suggPrice = pricing.getPrice()
+  totPrice = galReq*suggPrice
+  message = "Price quoted and can be saved."
+
+  return res.render('quotePage.ejs', {error:'', message: message, gallonsRequested: galReq, delivAddress: delivAddress, deliveryDate: delivDate, suggPrice: suggPrice, totPrice: totPrice})      
+})
+
+router.post('/saveQuote',loggedIn,async(req,res) =>{
     //clientside validations go here Consult the register js route for an example
     const uid = req.user.uid
     const galReq = req.body.gallonsRequested
@@ -81,8 +141,6 @@ router.post('/',loggedIn,async(req,res) =>{
     const delivDate =  req.body.deliveryDate
     console.log(`DELIVERY DATE IS ${delivDate},${req.body.deliveryDate}`)
     const delivAddress = req.body.deliveryAddress
-    const suggPrice = 1.50
-    const totPrice = galReq * suggPrice
 
     if(galReq == ''){
       console.log('failed gals')
