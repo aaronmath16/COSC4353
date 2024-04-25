@@ -9,7 +9,5 @@ router.get('/',loggedIn,(req,res,next) =>{
         }
         res.render('login.ejs',{message:"Logged out"})})
 })
-router.post('/',(req,res) =>{
-    //Remove soon?
-})
+
 module.exports = router

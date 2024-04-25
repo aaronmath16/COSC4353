@@ -68,6 +68,8 @@ router.post('/',loggedIn,(req,res) =>{
     if (fullname == '' || address1 == '' || city == '' || state == '' || zipcode == ''){
         return res.render('profile.ejs',{error:'Missing input!', fullname: fullname, address1: address1, address2:address2, city: city, state: state, zipcode: zipcode})
     }
+    console.log(fullname)
+
 
 
     if (fullname.length > 50){
@@ -93,7 +95,7 @@ router.post('/',loggedIn,(req,res) =>{
     if(zipcode.length < 5 || zipcode.length > 9){
         error = "Invalid zip code"
         return res.render('profile.ejs',{error:error, fullname: fullname, address1: address1, address2:address2, city: city, state: state})
-    }
+    } 
 
     delivAddress = address1 + ' ' + address2 + ' ' + city + ' ' + state + ' ' + zipcode
 

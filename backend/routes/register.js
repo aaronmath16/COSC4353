@@ -53,7 +53,27 @@ const createUser = async (username,password) =>{
     //send user and hashed pw into the DB
 
     const hashedPw = await bcrypt.hash(password,10)
-    const result = db.all(`INSERT INTO user_credentials(username,password) VALUES ($1,$2)`,[username,hashedPw],function(err,rows) {
+
+    await new Promise(function(resolve,reject){
+      try{
+        db.all(`INSERT INTO user_credentials(username,password) VALUES ($1,$2)`,[username,hashedPw],async function(err,rows) {
+          if (err) {
+            reject(console.error('Error inserting:', err.message))
+          }
+          if (rows.length ==0){
+            console.log(`couldnt insert`);
+            resolve(false)
+          }else{
+            //console.log(rows[0])
+            console.log(`User inserted`);
+            resolve(rows[0])
+          }
+        })}catch(err){
+          reject(err)
+        }
+    })
+
+/*     const result = db.all(`INSERT INTO user_credentials(username,password) VALUES ($1,$2)`,[username,hashedPw],function(err,rows) {
         if (err) {
           return console.error('Error inserting:', err.message);
         }
@@ -65,7 +85,7 @@ const createUser = async (username,password) =>{
 
             return rows[0]
         }
-      })
+      }) */
     //const result = await pool.query(`INSERT INTO user_credentials(username,password) VALUES ($1,$2)`,[username,hashedPw])
 
 }
@@ -101,7 +121,7 @@ router.post('/',loggedOut, async (req,res) =>{
         return res.render('registerUser.ejs', {error : "PW too long"})
     }
 
-    createUser(username,password)
+    await createUser(username,password)
     res.render('login.ejs',{message:"Registration Sucessful!  Please log in and fill in your profile details.", error:''})
 })
 

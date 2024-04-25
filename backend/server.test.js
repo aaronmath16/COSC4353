@@ -2,37 +2,62 @@ const supertest = require('supertest')
 const app = require( './server.js')
 server = supertest.agent(app)
 const db = require( "./runDb")
+const FuelPricing = require('./fuelquote.js')
 
-const getUid = () =>{
-    db.get(`select uid from user_credentials where username = 'TESTINGUSERNAME';`,[],(err,row)=>
-    {
-        if(err){
-        console.error(err)
-    }else{
-        return row[0]
-    }
-})}
 
-const cleanUp = (uid) =>{
+const getUid = async () =>{
 
-    db.run(`DELETE FROM user_credentials WHERE uid = '?';`,[uid],(err)=>
-    {
-        if(err){
-        console.error(err)
-    }})
-
-    db.run(`DELETE FROM client_information WHERE uid = '?';`,[uid],(err)=>
-    {
-        if(err){
-        console.error(err)
-    }})
-
-    db.run(`DELETE FROM quotes WHERE uid = '?';`,[uid],(err)=>
-    {
-        if(err){
-        console.error(err)
-    }})
+    await new Promise(function(resolve,reject){
+        try{
+            db.get(`select uid from user_credentials where username = 'TESTINGUSERNAME';`,[],(err,row)=>
+            {
+                if(err){
+                console.error(err)
+            }else{
+                console.log(row[0])
+                resolve(row[0])
+            }})
+          }catch(err){
+            reject(err)
+          }
+      })
 }
+
+const cleanUp = async (uid) =>{
+
+    return await new Promise(function(resolve,reject){
+        try{
+
+            db.run(`DELETE FROM quotes WHERE uid = (select uid from user_credentials where username = 'TESTINGUSERNAME');`,[uid],(err)=>
+            {
+                if(err){
+                console.error(err)
+            }})
+
+            db.run(`DELETE FROM client_information WHERE uid = (select uid from user_credentials where username = 'TESTINGUSERNAME');`,[uid],(err)=>
+            {
+                if(err){
+                console.error(err)
+            }})
+            
+            db.run(`DELETE FROM user_credentials WHERE uid = (select uid from user_credentials where username = 'TESTINGUSERNAME');`,[],(err)=>
+            {
+                if(err){
+                console.error(err)
+            }})
+        
+
+        
+
+          }catch(err){
+            reject(err)
+          }
+          resolve(true)
+      })
+
+
+}
+
 
 describe("GETS without login",()=>{
 
@@ -90,7 +115,7 @@ describe("Basic Register POSTS",()=>{
    })
 
    test("success",(done) =>{
-    db.run(`DELETE FROM user_credentials WHERE username = "TESTINGUSERNAME"`)
+
     server.post('/register').type('form').send({
        username:"TESTINGUSERNAME",
        password:"123",
@@ -98,9 +123,11 @@ describe("Basic Register POSTS",()=>{
    }).expect(200)
    .expect("Location","Profile")
    .end(()=>{
-       done()
+    done()
    })
 })
+
+
 
 
 
@@ -141,16 +168,24 @@ describe('Login POSTS',()=>{
 
     test('valid password',(done) =>{
         server.post('/login').type('form').send({
-            username:"rows",
-            password:"rows",
-            repeatPw:"testing"
+            username:"TESTINGUSERNAME",
+            password:"123",
         }).expect(200).end(()=>{
             done()
         })
     })
 })
 
+describe('profile while logged in',()=>{
 
+    test("profile while logged in",(done) =>{
+        server.get('/profile').expect(200)
+       .expect("Location","profile")
+       .end(()=>{
+           done()
+       })
+   })
+})
 
 describe('profile POSTS',()=>{
     test('Invalid name',(done) =>{
@@ -165,7 +200,14 @@ describe('profile POSTS',()=>{
             done()
         })
     })
+    test('missing info',(done) =>{
+        server.post('/profile').type('form').send({
+            fullname:"John Smith",
 
+        }).expect(302).end(()=>{
+            done()
+        })
+    })
     test('Invalid address1',(done) =>{
         server.post('/profile').type('form').send({
             fullname:"John Smith",
@@ -271,8 +313,37 @@ describe('profile POSTS',()=>{
            done()
        })
    })
-    test('Valid quote',(done) =>{
-        server.post('/quotePage').type('form').send({
+
+    test('Valid quote get',(done) =>{
+        server.post('/quotePage/getQuoted').type('form').send({
+            gallonsRequested:"123",
+            deliveryDate:'2040-10-23',
+            deliveryAddress:"Addre2s",
+            city:"Houston",
+            state:'TX',
+            zipcode:'77204'
+        }).expect(200).end((err)=>{
+            if (err) return done(err)
+            done()
+        })
+    })
+
+    test('Valid quote get with above 1000',(done) =>{
+        server.post('/quotePage/getQuoted').type('form').send({
+            gallonsRequested:"2000",
+            deliveryDate:'2040-10-23',
+            deliveryAddress:"Addre2s",
+            city:"Houston",
+            state:'TX',
+            zipcode:'77204'
+        }).expect(200).end((err)=>{
+            if (err) return done(err)
+            done()
+        })
+    })
+
+    test('Valid quote save',(done) =>{
+        server.post('/quotePage/saveQuote').type('form').send({
             gallonsRequested:"123",
             deliveryDate:'2040-10-23',
             deliveryAddress:"Addre2s",
@@ -286,8 +357,22 @@ describe('profile POSTS',()=>{
     })
 
 
-    test('invalid date',(done) =>{
-        server.post('/quotePage').type('form').send({
+    test('invalid date get',(done) =>{
+        server.post('/quotePage/getQuoted').type('form').send({
+            gallonsRequested:"100",
+            deliveryAddress:"1234",
+            deliveryDate:"not a real date",
+            city:"Houston",
+            state:'TX',
+            zipcode:'77204'
+        }).expect(302).end((err)=>{
+            if (err) return done(err)
+            done()
+        })
+    })
+
+    test('invalid date save',(done) =>{
+        server.post('/quotePage/saveQuote').type('form').send({
             gallonsRequested:"100",
             deliveryAddress:"1234",
             deliveryDate:"not a real date",
@@ -301,8 +386,22 @@ describe('profile POSTS',()=>{
     })
 
 
-    test('invalid gals',(done) =>{
-        server.post('/quotePage').type('form').send({
+    test('invalid gals get',(done) =>{
+        server.post('/quotePage/getQuoted').type('form').send({
+            gallonsRequested:"",
+            deliveryAddress:"123",
+            deliveryDate:"2024-04-04",
+            city:"Houston",
+            state:'TX',
+            zipcode:'77204'
+        }).expect(302).end((err)=>{
+            if (err) return done(err)
+            done()
+        })
+    })
+
+    test('invalid gals save',(done) =>{
+        server.post('/quotePage/saveQuote').type('form').send({
             gallonsRequested:"",
             deliveryAddress:"123",
             deliveryDate:"2024-04-04",
@@ -316,11 +415,26 @@ describe('profile POSTS',()=>{
     })
 }) 
 
-/* describe('clean up',()=>{
-    test('clean up',(done) =>{
 
-console.log(getUid())
-cleanUp(getUid())
-done()
-    })
-}) */
+describe('logout',()=>{
+    test("logout",(done) =>{
+        server.get('/logout').expect(200)
+       .expect("Location","login")
+       .end(()=>{
+           done()
+       })
+   })
+})
+
+
+describe('proper margins',()=>{
+
+    test("out of state",async() =>{
+        quote = new FuelPricing(1,1001,'MN',false)
+        expect(quote.getPrice()).toBe(1.74)
+        await cleanUp(await getUid())
+   })
+})
+
+
+
