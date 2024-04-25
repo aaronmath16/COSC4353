@@ -94,7 +94,7 @@ router.get('/',loggedIn,async (req,res) =>{
       delivAddress += row.zip
       }
 
-    res.render('quotePage.ejs', {error:'', delivAddress: delivAddress})
+    res.render('quotePage.ejs', {error:'', delivAddress: delivAddress, disableSave:true})
 })
 
 router.post('/getQuoted', loggedIn, async(req, res) =>{
@@ -109,12 +109,12 @@ router.post('/getQuoted', loggedIn, async(req, res) =>{
 
   if(galReq == ''){
     console.log('failed gals')
-      return res.redirect(302,'quotePage.ejs', {error: "Missing Gallons Requested!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
+      return res.redirect(302,'quotePage.ejs', {error: "Missing Gallons Requested!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice, disableSave:true})
   }
   //Potentially add an extra check here for date range
   else if(isNaN(new Date(delivDate))){
     console.log('failed date')
-    return res.redirect(302,'quotePage.ejs', {error: "Invalid date!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
+    return res.redirect(302,'quotePage.ejs', {error: "Invalid date!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice, disableSave:true})
   }
 
   row = await existsUid(uid)
@@ -130,7 +130,7 @@ router.post('/getQuoted', loggedIn, async(req, res) =>{
   totPrice = galReq*suggPrice
   message = "Price quoted and can be saved."
 
-  return res.render('quotePage.ejs', {error:'', message: message, gallonsRequested: galReq, delivAddress: delivAddress, deliveryDate: delivDate, suggPrice: suggPrice, totPrice: totPrice})      
+  return res.render('quotePage.ejs', {error:'', message: message, gallonsRequested: galReq, delivAddress: delivAddress, deliveryDate: delivDate, suggPrice: suggPrice, totPrice: totPrice, disableSave:false})      
 })
 
 router.post('/saveQuote',loggedIn,async(req,res) =>{
@@ -144,12 +144,12 @@ router.post('/saveQuote',loggedIn,async(req,res) =>{
 
     if(galReq == ''){
       console.log('failed gals')
-        return res.redirect(302,'quotePage.ejs', {error: "Missing Gallons Requested!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
+        return res.redirect(302,'quotePage.ejs', {error: "Missing Gallons Requested!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice, disableSave:true})
     }
     //Potentially add an extra check here for date range
     else if(isNaN(new Date(delivDate))){
       console.log('failed date')
-      return res.redirect(302,'quotePage.ejs', {error: "Invalid date!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
+      return res.redirect(302,'quotePage.ejs', {error: "Invalid date!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice, disableSave:true})
     }
     //Send to Database here!
 
@@ -183,7 +183,7 @@ router.post('/saveQuote',loggedIn,async(req,res) =>{
       });*/
 
     console.log('valid quote!')
-    return res.render('quotePage.ejs', {message:"Quote will be sent to Database!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
+    return res.render('quotePage.ejs', {message:"Quote will be sent to Database!", delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice, disableSave:true})
 })
 
 module.exports = router
