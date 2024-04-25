@@ -29,8 +29,8 @@
                 <input class="field" type="number" name="gallonsRequested" id="gallonsRequested" required placeholder="Gallons Requested" value="<%= locals.gallonsRequested%>">
                 <input class="field" type="text" name="deliveryAddress" id="deliveryAddress" readonly placeholder="Delivery Address" value="<%= locals.delivAddress%>">
                 <input class="field" type="date" name="deliveryDate" id="deliveryDate" placeholder="Delivery Date" required value="<%= locals.deliveryDate%>">
-                <input class="field" type="number" name="quotePrice" id="quotePrice" readonly placeholder="Price Per Gallon. Will Calculate in Fuel Quote Class" value="<%= typeof locals.suggPrice == 'undefined' ? locals.suggPrice : locals.suggPrice.toFixed(2)%>">
-                <input class="field" type="number" name="totalDue" id="totalDue" readonly placeholder="Total Amount Due.  Will Calculate in Fuel Quote Class" value="<%= typeof locals.totPrice == 'undefined' ? locals.totPrice : locals.totPrice.toFixed(2)%>">
+                <input class="field" type="number" name="quotePrice" id="quotePrice" readonly placeholder="Price Per Gallon." value="<%= typeof locals.suggPrice == 'undefined' ? locals.suggPrice : locals.suggPrice.toFixed(4)%>">
+                <input class="field" type="number" name="totalDue" id="totalDue" readonly placeholder="Total Amount Due." value="<%= typeof locals.totPrice == 'undefined' ? locals.totPrice : locals.totPrice.toFixed(4)%>">
                 <button type="submit" form="quoteForm" formaction="/quotePage/getQuoted">Get Quoted</button>
                 <button id="saveButton" type="submit" form="quoteForm" formaction="/quotePage/saveQuote" <%= (typeof locals.disableSave != 'undefined' && !locals.disableSave) ?   console.log('Save enabled') : 'disabled' %>>Save Quote</button>
             </form>

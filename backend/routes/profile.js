@@ -149,7 +149,7 @@ router.post('/',loggedIn,(req,res) =>{
     var suggPrice = 1.50
     var totPrice = 0
 
-    return res.render('quotePage.ejs', {delivAddress: delivAddress, suggPrice: suggPrice, totPrice: totPrice})
+    res.redirect('/quotePage')
 })
 
 function Info(req, res, next) {
