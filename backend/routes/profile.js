@@ -99,14 +99,7 @@ router.post('/',loggedIn,(req,res) =>{
 
     delivAddress = address1 + ' ' + address2 + ' ' + city + ' ' + state + ' ' + zipcode
 
-    /*const db = new sqlite3.Database('data.db', (err) => {
-        if (err) {
-            console.error('Error connecting to database:', err.message);
-        }
-        else{
-            console.log('Connected to the database.');
-        }
-    });*/
+    
 
 
     //TODO UID/client_id (schema redesign?) and also only run one of these, maybe a try block or a simple check for existing values
@@ -136,14 +129,7 @@ router.post('/',loggedIn,(req,res) =>{
     }
 
 
-    /*db.close((err) => {
-        if (err) {
-            console.error('Error closing database:', err.message);
-        }
-        else{
-            console.log('Database connection closed.');
-        }
-    });*/
+
 
 
     var suggPrice = 1.50
