@@ -8,7 +8,7 @@ const mockdb = require('../mockdb')
 const mockProfile = mockdb.profile
 const sqlite3 = require('sqlite3').verbose()
 
-
+//this is what you will use to set and view the profile informatoin
 var delivAddress = null
 
 var mockprofile = mockProfile[0]

@@ -1,5 +1,6 @@
 const base = 1
 //Simple class, to be implemented in final assignment.
+//this is what will determine the pricing based on the quote
 class FuelPricing{ 
     constructor(uid, gals, state, histExists){
         this.uid = uid
